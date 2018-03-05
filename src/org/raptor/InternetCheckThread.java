@@ -9,15 +9,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.*;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class InternetCheckThread implements Runnable{
-
+	private final Logger logger;
 	private long interval;
 
 	public InternetCheckThread(long interval)
 	{
 		this.interval=interval;
+		logger=Logger.getLogger(InternetCheckThread.class.getName());
 	}
 	
 	
@@ -37,14 +40,12 @@ public class InternetCheckThread implements Runnable{
 				URL url=new URL("http://www.google.com");
 				URLConnection connection=url.openConnection();
 				connection.connect();
-			
-				System.out.println("Internet available");
+				logger.log(Level.INFO,"Internet available");
 				
 			}
 			catch(IOException e)
 			{
-				System.out.println("No network connectivity");
-
+				logger.log(Level.INFO,"No netwok connectivity");
 			}
 			finally {
 
@@ -77,13 +78,13 @@ public class InternetCheckThread implements Runnable{
 			String name = networkInterface.getDisplayName();
 
 			if (Pattern.matches("eth[0-9]", name) || Pattern.matches("wlp1s[0-9]", name)) {
-				System.out.println(name);
+				logger.log(Level.INFO,"network interface is "+name);
 				//This method print the ip address of system
 				printInetAddress(networkInterface);
 				break;
 			}
 			else {
-				System.out.println("localhost");
+				logger.log(Level.INFO,"localhost");
 				printInetAddress(networkInterface);
 
 			}
@@ -97,7 +98,7 @@ public class InternetCheckThread implements Runnable{
 
 				InetAddress address = inetAddresses.nextElement();
 				if(address instanceof Inet4Address)
-					System.out.println("ipv4 address is "+address.getHostAddress());
+					logger.log(Level.INFO,"ipv4 address is "+address.getHostAddress());
 
 			}
 	}

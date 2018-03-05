@@ -3,9 +3,11 @@ package org.raptor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FindIpAddressAndNetActivity {
-	
+	private final static Logger logger=Logger.getLogger(FindIpAddressAndNetActivity.class.getName());
 	public static void main(String[] args){		
 		
 		int interval=0;
@@ -17,7 +19,8 @@ public class FindIpAddressAndNetActivity {
 		}
 		catch(IOException e)
 		{
-			System.out.println(e.getMessage());
+			logger.log(Level.INFO,"",e);
+
 		}
 		
 		Thread thread=new Thread(new InternetCheckThread(interval));
