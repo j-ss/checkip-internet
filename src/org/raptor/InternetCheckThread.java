@@ -56,7 +56,7 @@ public class InternetCheckThread implements Runnable{
 				}
 				catch (SocketException e)
 				{
-
+					logger.log(Level.WARNING," exception ",e);
 				}
 			}
 

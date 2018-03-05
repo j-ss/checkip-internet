@@ -19,7 +19,7 @@ public class FindIpAddressAndNetActivity {
 		}
 		catch(IOException e)
 		{
-			logger.log(Level.INFO,"",e);
+			logger.log(Level.INFO," exception ",e);
 
 		}
 		
