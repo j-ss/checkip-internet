@@ -7,24 +7,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownHostException;
+import java.net.*;
+import java.util.Enumeration;
+import java.util.regex.Pattern;
 
 public class InternetCheckThread implements Runnable{
 
-	private int interval;
-	File file=null;
-	public InternetCheckThread(int interval)
+	private long interval;
+
+	public InternetCheckThread(long interval)
 	{
 		this.interval=interval;
-		file=new File("output");
-		try {
-			file.createNewFile();
-		} catch (IOException e) {
-			System.out.println("file not created");
-		}
 	}
 	
 	
@@ -47,80 +40,66 @@ public class InternetCheckThread implements Runnable{
 			
 				System.out.println("Internet available");
 				
-				ipAddress();
-				
 			}
 			catch(IOException e)
 			{
 				System.out.println("No network connectivity");
-				
-				InetAddress address=null;
-				try {
-					address = InetAddress.getLocalHost();
-					String hostAddress=address.getHostAddress();
-					
-					
-						System.out.println("localhost "+hostAddress);
-					
-					
-				}
-				catch (UnknownHostException eq) {
-					System.out.println("problem to connect with system");
-				}
-				
+
 			}
-			
-			try {
-				Thread.sleep(interval*100*60);
-			} catch (InterruptedException e) {
-				System.out.println(e.getMessage());
+			finally {
+
+				try
+				{
+					//This method check for network interface present in system
+						ipAddress();
+				}
+				catch (SocketException e)
+				{
+
+				}
 			}
-				
+	long currentTime=System.currentTimeMillis();
+			long time=currentTime;
+		while(time<=currentTime+interval*60000)
+
+			time=System.currentTimeMillis();
 		}
 		
 	}
 	
-	public void ipAddress()
+	public void ipAddress() throws SocketException
 	{
-		Process proc=null;
-		try {
-			proc = Runtime.getRuntime().exec("ifconfig");
-			// Read the output
+		//Taking list of network interface
+		Enumeration<NetworkInterface> networkInterfaceList = NetworkInterface.getNetworkInterfaces();
 
-	        BufferedReader reader =  
-	              new BufferedReader(new InputStreamReader(proc.getInputStream()));
-	        
-	        PrintWriter out=new PrintWriter(file);
-	        String line = "";
-	        while((line = reader.readLine()) != null) {
-	            out.write(line);
-	            out.flush();
-	        }   
-	            
-	            proc.waitFor();
-	        	out.close();
-	                
-	        	reader=new BufferedReader(new FileReader(file));
-	        	String input=reader.readLine();
-	        	int index=input.indexOf("wlp1s0");
-	        	int index1=input.indexOf("inet addr",index);
-	        	
-	        	for(int i=index1;i<index1+21;i++)
-	                System.out.print(input.charAt(i));
-	        	
-	        	reader.close();	
-	        
+		while (networkInterfaceList.hasMoreElements()) {
+			NetworkInterface networkInterface = networkInterfaceList.nextElement();
+			String name = networkInterface.getDisplayName();
 
-		} 
-		catch(FileNotFoundException |InterruptedException e)
-		{
-			System.out.println(e.getMessage());
+			if (Pattern.matches("eth[0-9]", name) || Pattern.matches("wlp1s[0-9]", name)) {
+				System.out.println(name);
+				//This method print the ip address of system
+				printInetAddress(networkInterface);
+				break;
+			}
+			else {
+				System.out.println("localhost");
+				printInetAddress(networkInterface);
+
+			}
 		}
-		catch (IOException e) {
-			
-			System.out.println(e.getMessage());
-		}
-		System.out.println();
+	}
+	public void printInetAddress(NetworkInterface networkInterface)
+	{
+			Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+			while (inetAddresses.hasMoreElements())
+			{
+
+				InetAddress address = inetAddresses.nextElement();
+				if(address instanceof Inet4Address)
+					System.out.println("ipv4 address is "+address.getHostAddress());
+
+			}
 	}
 
 }

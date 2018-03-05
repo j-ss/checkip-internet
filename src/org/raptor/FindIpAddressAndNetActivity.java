@@ -20,8 +20,10 @@ public class FindIpAddressAndNetActivity {
 			System.out.println(e.getMessage());
 		}
 		
-		new Thread(new InternetCheckThread(interval)).start();
-		
+		Thread thread=new Thread(new InternetCheckThread(interval));
+			thread.start();
+
+
 	}
 
 }
