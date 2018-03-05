@@ -47,18 +47,19 @@ public class InternetCheckThread implements Runnable{
 				try
 				{
 					//This method check for network interface present in system
-						ipAddress();
+					ipAddress();
+					//wait one minute
+					long currentTime=System.currentTimeMillis();
+					long time=currentTime;
+					while(time<=currentTime+interval*60000)
+						time=System.currentTimeMillis();
 				}
 				catch (SocketException e)
 				{
 
 				}
 			}
-	long currentTime=System.currentTimeMillis();
-			long time=currentTime;
-		while(time<=currentTime+interval*60000)
 
-			time=System.currentTimeMillis();
 		}
 		
 	}
