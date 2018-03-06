@@ -22,6 +22,7 @@ public class InternetCheckThread  extends TimerTask{
 
 	public static void main(String[] args) {
 
+		// Task reshedulling interval in seconds
 		int interval = 5;
 
 		Timer timer = new Timer();
@@ -55,7 +56,7 @@ public class InternetCheckThread  extends TimerTask{
 				try
 				{
 					//This method check for network interface present in system
-					ipAddress();
+					 ipAddress();
 				}
 				catch (SocketException e)
 				{
@@ -67,11 +68,12 @@ public class InternetCheckThread  extends TimerTask{
 		
 	}
 	
-	public void ipAddress() throws SocketException
+	public void ipAddress()throws SocketException
 	{
 		//Taking list of network interface
 		Enumeration<NetworkInterface> networkInterfaceList = NetworkInterface.getNetworkInterfaces();
 
+		// iterate through the list of networkinterface
 		while (networkInterfaceList.hasMoreElements()) {
 			NetworkInterface networkInterface = networkInterfaceList.nextElement();
 			String name = networkInterface.getDisplayName();
