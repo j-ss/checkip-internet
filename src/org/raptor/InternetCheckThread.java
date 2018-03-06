@@ -1,28 +1,36 @@
 package org.raptor;
 
 
+
 import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-public class InternetCheckThread implements Runnable{
-	private final Logger logger;
-	private long interval;
+public class InternetCheckThread  extends TimerTask{
 
-	public InternetCheckThread(long interval)
+	private final Logger logger;
+
+	public InternetCheckThread()
 	{
-		this.interval=interval;
 		logger=Logger.getLogger(InternetCheckThread.class.getName());
 	}
-	
-	
+
+	public static void main(String[] args) {
+
+		int interval = 5;
+
+		Timer timer = new Timer();
+		timer.schedule(new InternetCheckThread(),0, interval * 1000 );
+
+	}
 	@Override
 	public void run() {
-		while(true)
-		{
+
 			
 			//check Internet connectivity
 			
@@ -48,11 +56,6 @@ public class InternetCheckThread implements Runnable{
 				{
 					//This method check for network interface present in system
 					ipAddress();
-					//wait one minute
-					long currentTime=System.currentTimeMillis();
-					long time=currentTime;
-					while(time<=currentTime+interval*60000)
-						time=System.currentTimeMillis();
 				}
 				catch (SocketException e)
 				{
@@ -60,7 +63,7 @@ public class InternetCheckThread implements Runnable{
 				}
 			}
 
-		}
+
 		
 	}
 	
@@ -73,7 +76,7 @@ public class InternetCheckThread implements Runnable{
 			NetworkInterface networkInterface = networkInterfaceList.nextElement();
 			String name = networkInterface.getDisplayName();
 
-			if (Pattern.matches("eth[0-9]", name) || Pattern.matches("wlp1s[0-9]", name)) {
+			if (Pattern.matches("enp3s[0-9]", name) || Pattern.matches("wlp1s[0-9]", name)) {
 				logger.log(Level.INFO,"network interface is "+name);
 				//This method print the ip address of system
 				printInetAddress(networkInterface);
