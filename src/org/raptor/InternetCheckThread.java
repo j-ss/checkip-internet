@@ -23,9 +23,11 @@ public class InternetCheckThread  extends TimerTask{
 	public static void main(String[] args) {
 
 		// Task reshedulling interval in seconds
-		int interval = 5;
+		 int interval = 5;
 
 		Timer timer = new Timer();
+
+		//task will be schedule for zero delay and repeate after every interval seconds
 		timer.schedule(new InternetCheckThread(),0, interval * 1000 );
 
 	}
@@ -74,26 +76,36 @@ public class InternetCheckThread  extends TimerTask{
 		Enumeration<NetworkInterface> networkInterfaceList = NetworkInterface.getNetworkInterfaces();
 
 		// iterate through the list of networkinterface
-		while (networkInterfaceList.hasMoreElements()) {
+		while (networkInterfaceList.hasMoreElements())
+		{
 			NetworkInterface networkInterface = networkInterfaceList.nextElement();
+
+			//getting name of network interface
 			String name = networkInterface.getDisplayName();
 
 			if (Pattern.matches("enp3s[0-9]", name) || Pattern.matches("wlp1s[0-9]", name)) {
+
 				logger.log(Level.INFO,"network interface is "+name);
+
 				//This method print the ip address of system
 				printInetAddress(networkInterface);
+
 				break;
 			}
 			else {
-				logger.log(Level.INFO,"localhost");
-				printInetAddress(networkInterface);
+				 logger.log(Level.INFO,"localhost");
+
+				 printInetAddress(networkInterface);
 
 			}
 		}
 	}
 	public void printInetAddress(NetworkInterface networkInterface)
 	{
+
+		    //getting list of inetaddress
 			Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+
 			while (inetAddresses.hasMoreElements())
 			{
 
