@@ -22,13 +22,15 @@ public class IpAndInternetCheckTest {
   public void checkConnectivity() {
 
     boolean connectivity=internetCheck.isConnectivity();
-    assertEquals(true,connectivity);
+    boolean expected=true;                                       //here expected value is true and false check on both alternatively
+    assertEquals(expected,connectivity);
   }
 
   @Test
   public void ipAddress() {
 
     String ipAddress=internetCheck.getIpAddress();
-    assertEquals("192.168.1.115",ipAddress);           // here expected ip we found through command line
+    String expected="192.168.1.115";                            // here expected ip we found through command line
+    assertEquals(expected,ipAddress);
   }
 }
